@@ -17,14 +17,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set image name (lowercase)
+        run: |
+          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          IMAGE="ghcr.io/${OWNER}/lobehub:canary"
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+          echo "Using image: $IMAGE"
+
       - name: Log in to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build Docker image
-        run: |
-          docker build \
-            -t ghcr.io/${{ github.repository_owner }}/lobehub:canary \
-            .
+        run: docker build -t $IMAGE .
 
       - name: Push Docker image
-        run: docker push ghcr.io/${{ github.repository_owner }}/lobehub:canary
+        run: docker push $IMAGE
