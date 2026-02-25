@@ -1,5 +1,7 @@
 #!/bin/bash
 set -o pipefail
 
-eslint "{src,tests}/**/*.{js,jsx,ts,tsx}" --fix --concurrency=auto --prune-suppressions
-eslint "{src,tests}/**/*.{js,jsx,ts,tsx}" --concurrency=auto
+LINT_GLOB="{src,tests,packages,apps}/**/*.{js,jsx,ts,tsx}"
+
+eslint "$LINT_GLOB" --fix --concurrency=auto --prune-suppressions --no-error-on-unmatched-pattern
+eslint "$LINT_GLOB" --concurrency=auto --no-error-on-unmatched-pattern
